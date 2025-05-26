@@ -9,7 +9,7 @@ userName = "Alice";
 userAge = 25;
 isAdmin = true;
 
-// 문제 2. 아래 변수들에 적절한 타입과 초기값을 지정하세요.
+// 문제 2. 아래 변수들에 적절한 타입과 초기값을 지정하세요.g
 let productName: string = "바나나"; // 상품 이름
 let productPrice: number = 1000; // 상품 가격
 let isAvailable: boolean = false; // 상품 재고 여부
