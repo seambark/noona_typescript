@@ -27,21 +27,17 @@ const products: [string, number, boolean][] = [
 ];
 
 // 1. 상품 이름과 가격만 반환,리턴타입 정의필요
-function getProductNamesAndPrices(products: [string, number, boolean][]) {
-  const mapProduct = products.map(function (a) {
-    return a.slice(0, 2);
-  });
-
-  return mapProduct;
+function getProductNamesAndPrices(
+  products: [string, number, boolean][]
+): [string, number][] {
+  return products.map(([name, price]) => [name, price]);
 }
 
 // 2. 재고가 있는 상품만 반환,리턴타입 정의필요
-function getAvailableProducts(products: [string, number, boolean][]) {
-  const filterProduct = products.filter(function (a) {
-    return a[2] === true;
-  });
-
-  return filterProduct;
+function getAvailableProducts(
+  products: [string, number, boolean][]
+): [string, number, boolean][] {
+  return products.filter(([name, price, inStock]) => inStock);
 }
 
 // 테스트 코드
@@ -52,28 +48,12 @@ console.log(getAvailableProducts(products));
 // 기대 출력: [["Laptop", 1000, true], ["Book", 20, true]]
 
 // 문제 4. 사용자 정보를 업데이트하는 함수를 작성하세요. 나이가 제공되지 않으면 기본값으로 18을 사용하세요.
-let users: { name: string; age?: number }[] = [
-  {
-    name: "Charlie",
-  },
-  {
-    name: "Dana",
-  },
-];
 //매개변수, 리턴 타입 정의 필요
-function updateUser(userdata) {
-  // 나이가 제공되지 않으면 18로 설정
-  if (userdata.age === undefined) {
-    userdata.age = 18;
-  }
-
-  const filterUsers = users.filter(function (item, index) {
-    if (item.name == userdata.name) {
-      return (users[index].age = userdata.age);
-    }
-  });
-
-  return filterUsers[0];
+function updateUser(user: { name: string; age?: number }): {
+  name: string;
+  age: number;
+} {
+  return { ...user, age: user.age ?? 18 };
 }
 
 // 테스트 코드
@@ -82,19 +62,24 @@ console.log(updateUser({ name: "Dana", age: 25 })); // { name: "Dana", age: 25 }
 
 // 문제5. 아래와 같은 데이터 구조를 사용하여 특정 카테고리에 해당하는 상품의 이름을 출력하는 함수를 작성하세요.
 // proudcts 타입정의  필요
-const products2: { name?: string; price?: number; category?: string }[] = [
+const products2: {
+  name: string;
+  price: number;
+  category?: string;
+}[] = [
   { name: "Laptop", price: 1000, category: "Electronics" },
   { name: "Shoes", price: 50, category: "Fashion" },
   { name: "Book", price: 20 },
 ];
 
 //매개변수, 리턴 타입 정의 필요
-function getProductsByCategory(category: string) {
-  const findProduct = products2.filter(function (item) {
-    return item.category == category;
-  });
-
-  return findProduct[0]?.name !== undefined ? findProduct[0].name : [];
+function getProductsByCategory(category: string | undefined): string[] {
+  return products2.reduce((result: string[], item) => {
+    if (item.category === category) {
+      result.push(item.name);
+    }
+    return result;
+  }, []);
 }
 
 // 테스트 코드
