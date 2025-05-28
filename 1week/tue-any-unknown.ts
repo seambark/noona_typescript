@@ -32,31 +32,23 @@ enum TaskStatus2 {
     Failed = "Failed",
 }
 
-function processTask(status: TaskStatus2, input: unknown): string | undefined {
+function processTask(status: TaskStatus2, input: unknown): string {
 
   if(typeof input !==  "string") {
-    console.error("에러: 입력값은 문자열이어야 합니다.");
-    // if(typeof input === "undefined"){
-    //   console.error("undefined");
-    //   return
-    // } else {
-    //   console.error("입력값은 문자열이어야 합니다.");
-    //   return
-    // }
+    throw new Error("입력값은 문자열이어야 합니다.");
   }
 
- if(typeof input === "string") {
-    switch(status) {
-      case TaskStatus2.Pending:
-        return input.toUpperCase();
-      case TaskStatus2.InProgress:
-        return input.toLowerCase();
-      case TaskStatus2.Completed:
-        return "완료:" + input;
-      case TaskStatus2.Failed:
-        console.error("에러: 작업이 실패했습니다.")
-        return;
-    }
+  switch(status) {
+    case TaskStatus2.Pending:
+      return input.toUpperCase();
+    case TaskStatus2.InProgress:
+      return input.toLowerCase();
+    case TaskStatus2.Completed:
+      return "완료:" + input;
+    case TaskStatus2.Failed:
+      throw new Error("작업이 실패했습니다.")
+    default:
+      throw new Error("에러");
   }
 }
 
@@ -70,11 +62,25 @@ console.log(processTask(TaskStatus2.InProgress, "TaskA"));
 console.log(processTask(TaskStatus2.Completed, "Report1")); 
 // 기대 출력: "완료: Report1"
 
-console.log(processTask(TaskStatus2.Failed, "TaskX")); 
+// console.log(processTask(TaskStatus2.Failed, "TaskX")); 
 // 에러: 작업이 실패했습니다.
 
-console.log(processTask(TaskStatus2.Pending, 42)); 
+// console.log(processTask(TaskStatus2.Pending, 42)); 
 // 에러: 입력값은 문자열이어야 합니다.
+
+try {
+  console.log(processTask(TaskStatus2.Failed, "TaskX"));
+  // 에러: 작업이 실패했습니다.
+} catch (error) {
+  console.error(error.message);
+}
+
+try {
+  console.log(processTask(TaskStatus2.Pending, 42));
+  // 에러: 입력값은 문자열이어야 합니다.
+} catch (error) {
+  console.error(error.message);
+}
 
 // 문제 3. 아래 조건에 따라 코드를 작성하세요.
 // 로그 수준을 나타내는 enum 작성
@@ -116,7 +122,7 @@ function processUnknown(input: unknown): string | number {
   } else if(typeof input === "number") {
     return input * 10;
   } else {
-    return "Error";
+    throw new Error("에러")
   }
 }
 
@@ -127,4 +133,9 @@ console.log(processAny(true)); // 기대 출력: "true"
 
 console.log(processUnknown("hello")); // 기대 출력: "HELLO"
 console.log(processUnknown(42)); // 기대 출력: 420
-console.log(processUnknown(true)); // 에러 발생
+
+try {
+  console.log(processUnknown(true)); // 에러 발생
+} catch (error) {
+  console.error(error.message);
+}
