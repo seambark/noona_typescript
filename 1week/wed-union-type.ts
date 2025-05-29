@@ -1,39 +1,40 @@
 // 문제 1. 다양한 데이터 타입을 입력받아, 입력에 따라 다른 처리를 수행하는 함수를 작성하세요.
 // 매개변수, 리턴타입 정의필요 
 function processInput(input: number[] | string[] | { message: string }): string | number {
-    if (typeof input === "object") {
-        if ('message' in input) {
-            let message = input.message;
-            return message.toUpperCase();
+
+    if(Array.isArray(input)) {
+        // 빈 배열 먼저 처리
+        if (input.length === 0) {
+          return "데이터가 없습니다.";
         }
 
-        if(typeof input[0] === "number") {
+        if(input.every(el => typeof el === "number")) {
             let result = 0;
             input.forEach((num) => result+=num);
             return result;
-            
-        } else if (typeof input[0] === "string") {
+
+        } else if (input.every(el => typeof el === "string")) {
             return input.join("")
+
         } else {
             throw new Error("에러");
         }
-
-    } else {
-        throw new Error("에러");
+    }
+   
+    if ('message' in input) {
+        let message = input.message;
+        return message.toUpperCase();
     }
 
+    throw new Error("잘못된 입력 유형입니다.");
 }
 
 // 테스트 코드
 console.log(processInput([1, 2, 3])); // 6
 console.log(processInput(["hello", "world"])); // "helloworld"
 console.log(processInput({ message: "TypeScript" })); // "TYPESCRIPT"
+console.log(processInput([])); //데이터가 없습니다.
 
-try {
-  console.log(processInput(42 as any));
-} catch (error) {
-  console.error(error.message);
-}
 
 // 문제2. 다음 조건을 만족하는 코드를 작성하세요.
 // 클래스 정의
