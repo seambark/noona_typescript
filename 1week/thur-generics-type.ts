@@ -1,6 +1,6 @@
 // 문제 1. 배열의 첫 번째 요소를 반환하는 함수를 작성하세요. 배열의 요소 타입에 관계없이 작동해야 합니다.
 // 매개변수, 리턴타입 정의 필요 
-function getFirstElement<T>(array:T[]):T {
+function getFirstElement<T>(array:T[]):T | undefined {
   return array[0];
 }
 
@@ -11,18 +11,9 @@ console.log(getFirstElement([])); // undefined
 
 // 문제 2. 숫자 배열인지 문자열 배열인지 확인하는 함수를 작성하세요.
 // 매개변수, 리턴타입 정의 필요 
-function isNumberArray<S>(array:S[]):boolean {
-
-    if(array.every(el => typeof el === "number" || array.length === 0)) {
-        return true;
-
-    } else if(array.every(el => typeof el === "string")){
-
-        return false;
-    } else {
-        throw new Error("에러");
-    }
+function isNumberArray<T>(array:T[]):boolean {
     
+    return array.every((item) => typeof item === "number");
 }
 
 // 테스트 코드
@@ -69,9 +60,9 @@ type WithDefaults = WithDefault<Original>;
 // }
 
 // 문제 5. 키와 값을 받아 객체를 생성하는 함수를 작성하세요.
-function createObject<K, V>(key: K | any, value: V):any {
+function createObject<K extends PropertyKey, V>(key: K, value: V):{[P in K]:V} {
 
-  return {[key]: value};
+  return {[key]: value} as {[P in K]: V};
 }
 
 // 테스트 코드
