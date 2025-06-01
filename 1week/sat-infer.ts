@@ -24,7 +24,13 @@ console.log(getValue(user, "email")); // 기대 출력: "alice@example.com"
 
 
 // 문제 3. API 요청에서 들어오는 데이터의 형식에 따라 처리 로직이 달라집니다. 요청 타입에 따라 처리할 수 있는 데이터의 타입을 결정하세요.
-type RequestData<T> = T extends "text" ? string : T extends "json" ? Record<string, any> : T extends "binary" ? Uint8Array : never;
+type RequestData<T> = T extends "text" 
+  ? string 
+  : T extends "json" 
+  ? Record<string, any> 
+  : T extends "binary" 
+  ? Uint8Array 
+  : never;
 
 function processRequest<T extends "text" | "json" | "binary">(
   type: T,
@@ -38,7 +44,7 @@ function processRequest<T extends "text" | "json" | "binary">(
   } else if (type === "json") {
     return titleText + JSON.stringify(data);
   } else if (type === "binary") {
-    return titleText + data;
+    return titleText + (data as Uint8Array).join(",");
   }
 
   throw new Error("에러");
