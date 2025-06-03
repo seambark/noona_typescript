@@ -15,7 +15,7 @@ code {
 .loader {
   width: 45px;
   aspect-ratio: 1;
-  --c: no-repeat linear-gradient(#551E99 0 0);
+  --c: no-repeat linear-gradient(#03A9F4 0 0);
   background:
     var(--c) 0% 50%,
     var(--c) 50% 50%,
