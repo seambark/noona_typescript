@@ -58,9 +58,9 @@ const StyledNavLink = styled(NavLink)(({theme}) => ({
   "&:active":{
     color:theme.palette.text.primary,
   },
-  "&:focus":{
+  "&.active":{
     color:theme.palette.text.primary,
-  }
+  },
 }));
 
 const AppLayout = () => {
