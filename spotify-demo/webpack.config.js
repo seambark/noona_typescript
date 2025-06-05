@@ -87,6 +87,10 @@ module.exports = (env, argv) => {
         systemvars: true,
       }),
     ],
+    watchOptions: {
+      poll: true,
+      ignored: '/node_modules/',
+    },
   };
 };
 

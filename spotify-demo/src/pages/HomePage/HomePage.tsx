@@ -3,7 +3,7 @@ import NewReleases from './components/NewReleases'
 
 const HomePage = () => {
   return (
-    <div>
+    <div style={{position:"relative",height:"100%"}}>
         <NewReleases />
     </div>
   )

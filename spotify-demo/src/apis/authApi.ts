@@ -2,17 +2,13 @@ import axios from "axios";
 import { ClientCredentialTokenResponse } from "../models/auth";
 import { clientId, clientSecret } from "../configs/authConfig";
 
-// const encodedBase64 = (data:string):string => {
-//     if(typeof window !== "undefined") {
-//         return btoa(data)
-//     } else {
-//         return Buffer.from(data).toString("base64");
-//     }
-// }
-
-// const encodeBasicAuthHeader = (clientId: string, secretKey: string): string => {
-//   return `Basic ${btoa(`${clientId}:${secretKey}`)}`;
-// };
+const encodedBase64 = (data:string):string => {
+    if(typeof window !== "undefined") {
+        return btoa(data)
+    } else {
+        return Buffer.from(data).toString("base64");
+    }
+}
 
 export const getClientCredentialToken = async():Promise<ClientCredentialTokenResponse> => {
     try {
@@ -23,12 +19,7 @@ export const getClientCredentialToken = async():Promise<ClientCredentialTokenRes
             body,
             {
                 headers:{
-                    // "Authorization":`Basic ${encodedBase64(clientId + ':' + clientSecret)}`,
-                    Authorization:"Basic " +Buffer.from(clientId + ':' + clientSecret).toString('base64'),
-                    // "Authorization":"Basic " +(new Buffer.from(clientId + ':' + clientSecret).toString('base64')),
-                    // Authorization: `Basic ${encodedBase64(
-                    // `${clientId}:${clientSecret}`
-                    // )}`,
+                    "Authorization":`Basic ${encodedBase64(clientId + ':' + clientSecret)}`,
                     "Content-Type":"application/x-www-form-urlencoded",
                 },
             }
