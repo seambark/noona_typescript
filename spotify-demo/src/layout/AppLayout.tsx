@@ -5,6 +5,7 @@ import HomeIcon from '@mui/icons-material/Home';
 import SearchIcon from '@mui/icons-material/Search';
 import LibraryHead from './components/LibraryHead';
 import Library from './components/Library';
+import Navbar from './components/Navbar';
 
 const Layout = styled("div")({
   display: "flex",
@@ -18,6 +19,7 @@ const SideBar = styled("div")(({theme}) => ({
   height:"100%",
   display:"flex",
   flexDirection:"column",
+  flexShrink:0,
   [theme.breakpoints.down("sm")]: {
     display: "none",
   }
@@ -29,12 +31,8 @@ const ContentBox = styled(Box)(({theme}) => ({
   color:theme.palette.text.primary,
   width:"100%",
   padding:"25px 15px 25px 20px",
-  flexShrink:0,
-  "&:not(:first-child)":{
+  "&:not(:only-child) + .MuiBox-root":{
     marginTop:"15px",
-  },
-  "&:last-child":{
-    flexGrow:1
   }
 }));
 
@@ -55,9 +53,6 @@ const StyledNavLink = styled(NavLink)(({theme}) => ({
   "&:hover":{
     color:theme.palette.text.primary,
   },
-  "&:active":{
-    color:theme.palette.text.primary,
-  },
   "&.active":{
     color:theme.palette.text.primary,
   },
@@ -67,7 +62,7 @@ const AppLayout = () => {
   return (
     <Layout>
       <SideBar>
-        <ContentBox>
+        <ContentBox flexShrink={0}>
           <NavList>
             <li>
               <StyledNavLink to="/">
@@ -83,12 +78,15 @@ const AppLayout = () => {
             </li>
           </NavList>
         </ContentBox>
-        <ContentBox>
+        <ContentBox flexGrow={1}>
           <LibraryHead />
           <Library />
         </ContentBox>
       </SideBar>
-      <Outlet />
+      <ContentBox flexGrow={1}>
+        <Navbar />
+        <Outlet />
+      </ContentBox>
     </Layout>
   )
 }
