@@ -32,7 +32,9 @@ const UserImg = styled("div")({
   "& img": {
     display: "block",
     width: "100%",
-    height: "auto",
+    height: "100%",
+    objectFit: "cover",
+    objectPosition: "center center",
   },
   "& svg": {
     width: "100%",

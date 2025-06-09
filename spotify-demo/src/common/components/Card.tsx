@@ -20,6 +20,9 @@ const CardItem = styled("div")({
         },
         "& .imgBox" : {
             boxShadow: "3px 3px 0 rgba(3,169,244,0.8)",
+            "& img" : {
+                opacity: 1,
+            }
         }
     },
     "& .title": {
@@ -48,6 +51,7 @@ const Image = styled("div")({
         display: "block",
         width: "100%",
         height: "auto",
+        opacity: 0.8,
     },
     "& .iconPlay":{
         visibility:"hidden",

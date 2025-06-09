@@ -78,7 +78,7 @@ const AppLayout = () => {
             </li>
           </NavList>
         </ContentBox>
-        <ContentBox flexGrow={1}>
+        <ContentBox flexGrow={1} overflow="hidden">
           <LibraryHead />
           <Library />
         </ContentBox>
