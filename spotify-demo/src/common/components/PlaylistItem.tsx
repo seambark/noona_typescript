@@ -68,6 +68,7 @@ interface PlaylistItemProps {
   name: string;
   artistName: string | null | undefined;
   id: string;
+  handleClick: (id:string) => void;
 }
 
 
@@ -76,9 +77,10 @@ const PlaylistItem = ({
     name,
     artistName,
     id,
+    handleClick
 }:PlaylistItemProps) => {
   return (
-    <ListItem>
+    <ListItem onClick={() => handleClick(id)}>
         <ItemImg>
             { !image ? <MusicNoteIcon className="imgIcon"/> : <img src={image} alt=''/> }
             <PlayArrowIcon className="hoverIcon"/>

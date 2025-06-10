@@ -2,23 +2,24 @@ import React from 'react';
 import { SimplifiedPlaylist } from '../../models/playlist';
 import { styled } from '@mui/material';
 import PlaylistItem from '../../common/components/PlaylistItem';
+import { useNavigate } from 'react-router';
 
 interface PlaylistProps {
   playlists: SimplifiedPlaylist[];
 }
 
-// const UserPlaylist = styled("div") ({
-//   listStyle: "none",
-//   margin: 0,
-//   padding: 0,
-// })
-
-
 const Playlist = ({playlists}: PlaylistProps) => {
+  const navigate = useNavigate();
+
+  const handleClick = (id:string) => {
+    navigate(`/playlist/${id}`);
+  }
+
   return (
     <>
       { playlists.map((item) => (
-            <PlaylistItem 
+            <PlaylistItem
+                handleClick={handleClick}
                 name={item.name || ""}
                 image={(item.images && item.images[0]?.url) || null}
                 id={item.id || ""}
