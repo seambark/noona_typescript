@@ -2,6 +2,7 @@ import { SimplifiedAlbum } from "./album";
 import { ApiResponse } from "./apiResponse";
 import { Artist } from "./artist";
 import { Copyright, ExternalUrls, Image, Owner } from "./commonType";
+import { Episode, Track } from "./track";
 
 export interface GetCurrentUserPlaylistRequest {
     limit?: number,
@@ -40,7 +41,7 @@ export interface Playlist extends BasePlaylist{
     //     previous: string | null;
     //     total: number;
     // };
-    tracks?: ApiResponse<PlaylistTrack>;
+    tracks?: PlaylistTrack;
 }
 
 export interface GetPlaylistRequest {
@@ -49,6 +50,8 @@ export interface GetPlaylistRequest {
     fields?: string;
     additional_types?: string;
 }
+
+export type GetPlaylistItemsResponse = ApiResponse<PlaylistTrack>;
 
 export interface PlaylistTrack {
     added_at?: string | null;
@@ -63,79 +66,7 @@ export interface PlaylistTrack {
     track: Track | Episode;
 }
 
-export interface Track {
-    albums?: SimplifiedAlbum;
-    artists?: Artist;
-    available_markets?: string[];
-    disc_number?: number;
-    duration_ms?: number;
-    explicit?: boolean;
-    external_ids?: {
-        isrc?: string;
-        ean?: string;
-        upc?: string;
-    };
-    external_urls?: ExternalUrls;
-    href?: string;
-    id?: string;
-    is_playable?: boolean;
-    linked_from?: {};
-    restrictions?: {
-        reason?: string;
-    };
-    name?: string;
-    popularity?: string;  
-    preview_url?: string | null;
-    track_number?: number;
-    type?: "track";
-    uri?: string;
-    is_local?: boolean;
+export interface GetPlaylistItemsRequest extends GetPlaylistRequest {
+    offset?: number;
+    limit?: number;
 }
-
-export interface Episode {
-    audio_preview_url: string | null;
-    description: string;
-    html_description: string;
-    duration_ms: number;
-    explicit: boolean;
-    external_urls: ExternalUrls;
-    href: string;
-    id: string;
-    images: Image[];
-    is_externally_hosted: boolean;
-    is_playable: boolean;
-    language?: string;
-    languages: string[];
-    name: string;
-    release_date: string;
-    release_date_precision: string;
-    resume_point?: {
-        fully_played: boolean;
-        resume_position_ms: number;
-    };
-    type: string;
-    restrictions?: {
-        reason?: string;
-    };
-    show: Show;
-}
-
-export interface Show {
-    available_markets: string[];
-    copyrights: Copyright[];
-    description: string;
-    html_description: string;
-    explicit: boolean;
-    external_urls: ExternalUrls;
-    href: string;
-    id: string;
-    images: Image[];
-    is_externally_hosted: boolean;
-    languages: string[];
-    media_type: string;
-    name: string;
-    publisher: string;
-    type: "show";
-    uri: string;
-    total_episodes: number;
-} 

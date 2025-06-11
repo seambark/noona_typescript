@@ -1,16 +1,29 @@
 import React from 'react'
 import { Navigate, useParams } from 'react-router';
 import useGetPlaylist from '../../hooks/useGetPlaylist';
-import { styled } from '@mui/material';
+import { Paper, styled, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import MusicNoteIcon from '@mui/icons-material/MusicNote';
 import QueueMusicIcon from '@mui/icons-material/QueueMusic';
+import useGetPlaylistItem from '../../hooks/useGetPlaylistItem';
+import DesktopPlaylistItem from './components/DesktopPlaylistItem';
+import { PAGE_LIMIT } from '../../configs/commonConfig';
+
+const DetailContainer = styled("div")({
+  display: "flex",
+  gap: "30px",
+  flexDirection: "column",
+  height: "calc(100% - 25px)",
+  paddingBottom: "25px",
+});
 
 const DetailHeader = styled("div")({
   display: "flex",
   letterSpacing: "0.03em",
   gap: "30px",
+  minHeight: "200px",
   "@media (max-width:900px)" : {
       flexDirection: "column",
+      minHight: "320px",
   },
   "@media (max-width:750px)" : {
       alignItems: "center",
@@ -64,11 +77,26 @@ const PlaylistDetailPage = () => {
 
   if(id === undefined) return <Navigate to="/"/>;
 
-  const { data:playlist } = useGetPlaylist({playlist_id: id});
-  console.log(playlist)
+  const { 
+    data:playlist,
+    isLoading: isPlaylisLoading,
+    error: playlistError,
+  } = useGetPlaylist({playlist_id: id});
+
+  const {
+    data: playlistItems,
+    isLoading: isPlaylistItemsLoading,
+    error: playlistItemsError,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useGetPlaylistItem({playlist_id: id, limit: PAGE_LIMIT});
+
+  // console.log(playlist)
+  console.log(playlistItems)
 
   return (
-    <div>
+    <DetailContainer>
       <DetailHeader>
       {playlist ?
         <>
@@ -88,7 +116,39 @@ const PlaylistDetailPage = () => {
         </> 
         : "데이터 없음"}
       </DetailHeader>
-    </div>
+      {/* <Paper sx>
+            <TableContainer>
+
+            </TableContainer>
+      </Paper> */}
+      { playlist?.tracks?.total === 0 ? "검색" :
+      <Paper style={{width: "100%", overflowY: "auto", scrollbarWidth: "none"}}>
+        <Table stickyHeader aria-label="sticky table">
+            <TableHead>
+              <TableRow>
+                <TableCell>#</TableCell>
+                <TableCell>Title</TableCell>
+                <TableCell>Album</TableCell>
+                <TableCell>Date added</TableCell>
+                <TableCell>Duration</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {playlistItems?.pages.map((page, pageIndex) => 
+              page.items.map((item, itemIndex) => {
+                return (
+                <DesktopPlaylistItem 
+                  item={item} 
+                  key={(pageIndex * PAGE_LIMIT) + itemIndex + 1} 
+                  index={(pageIndex * PAGE_LIMIT) + itemIndex + 1}
+                  />
+                );
+              }))}
+            </TableBody>
+          </Table>
+        </Paper>
+        }
+    </DetailContainer>
   )
 }
 

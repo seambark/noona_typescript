@@ -83,7 +83,7 @@ const AppLayout = () => {
           <Library />
         </ContentBox>
       </SideBar>
-      <ContentBox flexGrow={1}>
+      <ContentBox flexGrow={1} overflow="hidden">
         <Navbar />
         <Outlet />
       </ContentBox>
