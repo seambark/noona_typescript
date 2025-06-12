@@ -2,6 +2,9 @@ import { styled, Typography } from '@mui/material';
 import React from 'react';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import AddIcon from '@mui/icons-material/Add';
+import useCreatePlaylist from '../../hooks/useCreatePlaylist';
+import useGetCurrentUserProfile from '../../hooks/useGetCurrentUserProfile';
+import { getSpotifyAuthUrl } from '../../utils/auth';
 
 const Header = styled("div")({
     textDecoration:"none",
@@ -32,13 +35,25 @@ const IconBtn = styled("button")({
     },
     },
     
-}) 
+})
+
 const LibraryHead = () => {
-  return (
+    const { mutate: createPlaylist } = useCreatePlaylist();
+    const { data:user } = useGetCurrentUserProfile();
+    
+    const handleCreatePlaylist = () => {
+        if(!user) {
+            return getSpotifyAuthUrl();
+        }
+
+        createPlaylist({name: "나의 플레이 리스트"})
+    }
+    
+    return (
     <Header>
         <BookmarkIcon />
         <Typography variant='h2' fontWeight={700}>Your Library</Typography>
-        <IconBtn aria-label="add">
+        <IconBtn aria-label="add" onClick={handleCreatePlaylist}>
             <AddIcon />
         </IconBtn>
     </Header>
