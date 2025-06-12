@@ -1,12 +1,15 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Navigate, useParams } from 'react-router';
 import useGetPlaylist from '../../hooks/useGetPlaylist';
-import { Paper, styled, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import { Paper, styled, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 import MusicNoteIcon from '@mui/icons-material/MusicNote';
 import QueueMusicIcon from '@mui/icons-material/QueueMusic';
 import useGetPlaylistItem from '../../hooks/useGetPlaylistItem';
 import DesktopPlaylistItem from './components/DesktopPlaylistItem';
 import { PAGE_LIMIT } from '../../configs/commonConfig';
+import { useInView } from 'react-intersection-observer';
+import Loading from '../../common/components/Loading';
+import ErrorMessage from '../../common/components/ErrorMessage';
 
 const DetailContainer = styled("div")({
   display: "flex",
@@ -72,7 +75,13 @@ const SubTxt = styled("p") ({
   margin: 0,
   gap: "7px",
 })
+
+const scrollEnd = styled("td") ({
+
+})
+
 const PlaylistDetailPage = () => {
+  const { ref, inView } = useInView();
   const { id } = useParams<{id: string}>();
 
   if(id === undefined) return <Navigate to="/"/>;
@@ -91,9 +100,22 @@ const PlaylistDetailPage = () => {
     isFetchingNextPage,
     fetchNextPage,
   } = useGetPlaylistItem({playlist_id: id, limit: PAGE_LIMIT});
-
-  // console.log(playlist)
+  
   console.log(playlistItems)
+
+  useEffect(() => {
+    if(inView && hasNextPage && !isFetchingNextPage){
+      fetchNextPage();
+    }
+  },[inView])
+
+  if (isPlaylisLoading) {
+    return <Loading />;
+  }
+
+  if (playlistItemsError) {
+    return <ErrorMessage errorMessage={playlistItemsError.message} />;
+  }
 
   return (
     <DetailContainer>
@@ -116,11 +138,6 @@ const PlaylistDetailPage = () => {
         </> 
         : "데이터 없음"}
       </DetailHeader>
-      {/* <Paper sx>
-            <TableContainer>
-
-            </TableContainer>
-      </Paper> */}
       { playlist?.tracks?.total === 0 ? "검색" :
       <Paper style={{width: "100%", overflowY: "auto", scrollbarWidth: "none"}}>
         <Table stickyHeader aria-label="sticky table">
@@ -144,6 +161,11 @@ const PlaylistDetailPage = () => {
                   />
                 );
               }))}
+              <TableRow ref={ref}>
+                <TableCell colSpan={5} align="center" style={{height:0, padding: 0}}>
+                  {isFetchingNextPage && <Loading />}
+                </TableCell>
+              </TableRow>
             </TableBody>
           </Table>
         </Paper>

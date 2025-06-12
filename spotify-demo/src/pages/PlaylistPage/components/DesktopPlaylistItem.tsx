@@ -14,21 +14,16 @@ const DesktopPlaylistItem = ({item, index}:DesktopPlaylistItemProps) => {
         return "description" in track;
     };
 
-const getFormatDate = (addedDate: string | number) => {
-    const date:Date = new Date(addedDate)
-    const year:number = date.getFullYear();
-    const month:number = (1 + date.getMonth());
-    const day:number = date.getDate();
-    return `${year}-${month}-${day}`;
+const getFormatDate = (addedDate: string):string => {
+    const date = new Date(addedDate);
+
+    return date.toISOString().split("T")[0];
 }
 
 const getTime = (difference:number):string => {
-    const secInMs = Math.floor(difference / 1000),
-    minInMs = Math.floor(secInMs / 60),
-    hourInMs = Math.floor(minInMs / 60),
-    seconds = secInMs % 60,
-    minutes = minInMs % 60,
-    hours = minutes % 24;
+    const totalSeconds = Math.floor(difference / 1000);
+    const minutes = Math.floor(totalSeconds / 60).toString().padStart(2, "0");
+    const seconds = (totalSeconds % 60).toString().padStart(2, "0");
 
     return `${minutes}:${seconds}`;
 }
