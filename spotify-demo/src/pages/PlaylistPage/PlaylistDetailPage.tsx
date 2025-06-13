@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { Navigate, useParams } from 'react-router';
 import useGetPlaylist from '../../hooks/useGetPlaylist';
-import { Paper, styled, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
+import { Container, Paper, styled, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 import MusicNoteIcon from '@mui/icons-material/MusicNote';
 import QueueMusicIcon from '@mui/icons-material/QueueMusic';
 import useGetPlaylistItem from '../../hooks/useGetPlaylistItem';
@@ -76,13 +76,21 @@ const SubTxt = styled("p") ({
   gap: "7px",
 })
 
-const scrollEnd = styled("td") ({
-
-})
-
 const PlaylistDetailPage = () => {
   const { ref, inView } = useInView();
   const { id } = useParams<{id: string}>();
+   const accessToken = localStorage.getItem("access_token");
+
+   if (!accessToken) {
+        return (
+            <Container sx={{ mt: 8 }}>
+                <Typography variant="body1" align="center" color="text.secondary">
+                    로그인 후 확인 가능한 페이지입니다.<br/>
+                    페이지 상단 우측의 Login 버튼을 눌러 로그인 후 확인해주세요!
+                </Typography>
+            </Container>
+        )
+    }
 
   if(id === undefined) return <Navigate to="/"/>;
 
