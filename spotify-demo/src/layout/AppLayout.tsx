@@ -10,7 +10,10 @@ import Navbar from './components/Navbar';
 const Layout = styled("div")({
   display: "flex",
   height:"100vh",
-  padding: "20px 10px"
+  padding: "20px 10px",
+  "@media (max-width:750px)" : {
+       height: "inherit",
+  },
 });
 
 const SideBar = styled("div")(({theme}) => ({

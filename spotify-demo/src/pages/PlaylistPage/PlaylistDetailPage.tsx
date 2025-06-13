@@ -10,6 +10,7 @@ import { PAGE_LIMIT } from '../../configs/commonConfig';
 import { useInView } from 'react-intersection-observer';
 import Loading from '../../common/components/Loading';
 import ErrorMessage from '../../common/components/ErrorMessage';
+import EmptyPlaylistWithSearch from './components/EmptyPlaylistWithSearch';
 
 const DetailContainer = styled("div")({
   display: "flex",
@@ -17,6 +18,9 @@ const DetailContainer = styled("div")({
   flexDirection: "column",
   height: "calc(100% - 25px)",
   paddingBottom: "25px",
+  "@media (max-width:900px)" : {
+       height: "inherit",
+  },
 });
 
 const DetailHeader = styled("div")({
@@ -79,18 +83,7 @@ const SubTxt = styled("p") ({
 const PlaylistDetailPage = () => {
   const { ref, inView } = useInView();
   const { id } = useParams<{id: string}>();
-   const accessToken = localStorage.getItem("access_token");
-
-   if (!accessToken) {
-        return (
-            <Container sx={{ mt: 8 }}>
-                <Typography variant="body1" align="center" color="text.secondary">
-                    로그인 후 확인 가능한 페이지입니다.<br/>
-                    페이지 상단 우측의 Login 버튼을 눌러 로그인 후 확인해주세요!
-                </Typography>
-            </Container>
-        )
-    }
+  const accessToken = localStorage.getItem("access_token");
 
   if(id === undefined) return <Navigate to="/"/>;
 
@@ -109,6 +102,17 @@ const PlaylistDetailPage = () => {
     fetchNextPage,
   } = useGetPlaylistItem({playlist_id: id, limit: PAGE_LIMIT});
   
+  if (!accessToken) {
+      return (
+          <Container sx={{ mt: 8 }}>
+              <Typography variant="body1" align="center" color="text.secondary">
+                  로그인 후 확인 가능한 페이지입니다.<br/>
+                  페이지 상단 우측의 Login 버튼을 눌러 로그인 후 확인해주세요!
+              </Typography>
+          </Container>
+      )
+  }
+
   console.log(playlistItems)
 
   useEffect(() => {
@@ -146,7 +150,8 @@ const PlaylistDetailPage = () => {
         </> 
         : "데이터 없음"}
       </DetailHeader>
-      { playlist?.tracks?.total === 0 ? "검색" :
+      { playlist?.tracks?.total === 0 ? 
+       <EmptyPlaylistWithSearch /> :
       <Paper style={{width: "100%", overflowY: "auto", scrollbarWidth: "none"}}>
         <Table stickyHeader aria-label="sticky table">
             <TableHead>
