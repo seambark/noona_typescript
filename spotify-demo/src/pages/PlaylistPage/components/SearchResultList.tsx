@@ -84,16 +84,12 @@ export const SearchResultList = ({
     const { mutate: addPlaylist } = useAddPlaylist(id as string);
 
      const handleAddList = (uri:string | undefined) => {
-        console.log("노래추가", id, uri)
-
         if(uri) {
                 addPlaylist({
                 uris: [uri], 
                 position: 0,
             })
         }
-        
-        // createPlaylist({name: "나의 플레이 리스트"})
     }
 
     console.log(list)
