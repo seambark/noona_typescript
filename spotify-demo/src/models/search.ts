@@ -3,6 +3,7 @@ import { ApiResponse } from "./apiResponse";
 import { Artist } from "./artist";
 import { SimplifiedPlaylist } from "./playlist";
 import { Show, SimplifiedAudiobooks, SimplifiedEpisode, Track } from "./track";
+import { Image } from "./commonType";
 
 export const enum SEARCH_TYPE {
     Album ="album",
@@ -31,4 +32,29 @@ export interface SearchResponse {
     show?: ApiResponse<Show>;
     episode?: ApiResponse<SimplifiedEpisode>;
     audiobook?: ApiResponse<SimplifiedAudiobooks>;
+}
+
+export interface Category {
+    href: string;
+    icons: Image[];
+    id: string;
+    name: string;
+}
+
+export interface GetCategoriesRequest {
+    locale?: "kr_KR";
+    limit?: number;
+    offset?: number;
+}
+
+export interface GetCategoriesResponse {
+    categories: {
+        href: string;
+        limit: number;
+        next: string | null;
+        offset: number;
+        previous: number | null;
+        total: number;
+        items: Category[];
+    }
 }
