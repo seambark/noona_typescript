@@ -26,7 +26,7 @@ export interface SearchRequestParams {
 
 export interface SearchResponse {
     artists?: ApiResponse<Artist>;
-    album?: ApiResponse<SimplifiedAlbum>;
+    albums?: ApiResponse<SimplifiedAlbum>;
     tracks?: ApiResponse<Track>;
     playlists?: ApiResponse<SimplifiedPlaylist>;
     show?: ApiResponse<Show>;

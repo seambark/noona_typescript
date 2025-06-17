@@ -71,12 +71,12 @@ const Card = ({image, name, artistName}:CardProps) => {
   return (
     <CardItem>
         <Image className="imgBox">
-            <img src={image} alt=''/>
+            {!image || undefined ? "" : <img src={image} alt=''/>}
             <PlayArrowIcon className='iconPlay'/>
         </Image>
         <div className='txtBox'>
-            <Typography className='title'>{name}</Typography>
-            <Typography className='name'>{artistName}</Typography>
+            <Typography className='title'>{!name || undefined  ? "미정" : name}</Typography>
+            <Typography className='name'>{!artistName || undefined  ? "이름없음" : artistName}</Typography>
         </div>
     </CardItem>
   )
