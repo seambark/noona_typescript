@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import useSearchItemsByKeyword from '../../hooks/useSearchItemsByKeyword';
 import { SEARCH_TYPE } from '../../models/search';
 import NoData from '../../common/components/NoData';
@@ -52,13 +52,10 @@ const SearchWithKeywordPage = () => {
         limit: 6,
     });
 
+
     if(isSearchKeywordListLoading) return <Loading />;
     if(searchKeywordListError) {
     return <ErrorMessage errorMessage={searchKeywordListError.message} />;
-  }
-
-    const handleClick = (id:string) => {
-    // navigate(`/playlist/${id}`);
   }
     
   return (
@@ -82,7 +79,10 @@ const SearchWithKeywordPage = () => {
         </BoxItem>
         <BoxItem>
           <Typography variant='h2' mb="15px">Songs</Typography>
-          {(keyword && searchKeywordList?.pages[0].tracks) && <SearchListItem list={searchKeywordList?.pages[0].tracks?.items}/>}
+          {(keyword && searchKeywordList?.pages[0].tracks) && 
+          <SearchListItem 
+            list={searchKeywordList?.pages[0].tracks?.items}
+          />}
         </BoxItem>
       </ContentBox>
       <ContentBox>

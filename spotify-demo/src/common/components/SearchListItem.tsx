@@ -1,12 +1,16 @@
-import { IconButton, styled, Typography } from '@mui/material'
-import React from 'react'
+import { Alert, IconButton, styled, Typography } from '@mui/material'
+import React, { useState } from 'react'
 import { Track } from '../../models/track';
 import MusicNoteIcon from '@mui/icons-material/MusicNote';
-import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 import NoData from './NoData';
+import ButtonSet from './ButtonSet';
+import useGetCurrentUserPlaylists from '../../hooks/useGetCurrentUserPlaylists';
+import AddIcon from '@mui/icons-material/Add';
+import CheckIcon from '@mui/icons-material/Check';
 
 interface SearchListProps {
     list: Track[];
+    children?: React.ReactNode,
     handleAddList?:() => void;
 }
 
@@ -58,16 +62,43 @@ const ItemTxt = styled("div")({
         },
         "& .itemAlbumName" : {}
     },
-    "& .btnAddList" : {
-        position: "absolute",
-        top: "50%",
-        right: 0,
-        transform: "translateY(-50%)",
+    // "& .btnAddList" : {
+    //     position: "absolute",
+    //     top: "50%",
+    //     right: 0,
+    //     transform: "translateY(-50%)",
+    // }
+})
+
+const Util = styled("div") ({
+    position: "absolute",
+    top: "50%",
+    right: 0,
+    transform: "translateY(-50%)",
+    "& .addBtn" : {
+        minWidth: "auto",
+        padding: "4px",
+        "& svg": {
+            width: "0.7em",
+            height: "0.7em",
+        }
     }
 })
 
-const SearchListItem = ({list, handleAddList}:SearchListProps) => {
-    // console.log(list)
+const SearchListItem = ({list, children, handleAddList}:SearchListProps) => {
+   const { 
+      data: playlist,
+      isLoading: playlistLoading,
+      error: playlistError,
+      // hasNextPage,
+      // isFetchingNextPage,
+      // fetchNextPage,
+   } = useGetCurrentUserPlaylists({limit:10, offset:0});
+
+   const handleCheckPlaylist = () => {
+        return  alert("로그인 후 이용가능")
+   }
+   
   return (
     <>
     {
@@ -83,9 +114,17 @@ const SearchListItem = ({list, handleAddList}:SearchListProps) => {
                 <span className='itemArtistName'>{track.artists && track.artists[0].name} |</span>
                 <span className='itemAlbumName'>{track.album?.name}</span>
             </Typography>
-            <IconButton color="primary" aria-label="노래추가" className="btnAddList">
-                <PlaylistAddIcon />
-            </IconButton>
+            <Util>
+                {playlist ? (
+                    <ButtonSet optionsList={playlist?.pages[0].items} trackUri={track.uri} />
+                ) : (
+                    <IconButton color="primary" aria-label="노래추가" className="addBtn" onClick={() => {
+                        handleCheckPlaylist()
+                    }}>
+                        <AddIcon />
+                    </IconButton>
+                )}
+            </Util>
         </ItemTxt>
     </SearchItem>)) : <NoData text='검색결과 없음'/>
     }

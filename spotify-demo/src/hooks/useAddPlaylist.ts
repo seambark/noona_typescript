@@ -3,20 +3,23 @@ import { addPlaylist } from "../apis/playlistApi";
 import { AddPlaylistRequest } from "../models/playlist";
 
 
-const useAddPlaylist = (playlist_id: string) => {
+const useAddPlaylist = () => {
     const queryClient = useQueryClient();
     
     return useMutation({
-        mutationFn: (params:AddPlaylistRequest) => {
+        mutationFn: ({playlist_id, params}:{
+            playlist_id: string;
+            params: AddPlaylistRequest;
+        }) => {
             if(playlist_id) {
                 return addPlaylist(playlist_id, params)
             }
 
             return Promise.reject(new Error("playlist id ist not defined"))
         },
-        onSuccess: () => {
+        onSuccess: (_data, variables) => {
             queryClient.invalidateQueries({
-                queryKey: ["playlist-detail", playlist_id],
+                queryKey: ["playlist-detail", variables.playlist_id],
             });
             queryClient.invalidateQueries({
                 queryKey: ["playlist-items"],

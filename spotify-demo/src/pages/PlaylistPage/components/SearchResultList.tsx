@@ -81,13 +81,16 @@ export const SearchResultList = ({
 }:SearchResultListProps) => {
     const { ref, inView } = useInView();
     const { id } = useParams<{id: string}>();
-    const { mutate: addPlaylist } = useAddPlaylist(id as string);
+    const { mutate: addPlaylist } = useAddPlaylist();
 
-     const handleAddList = (uri:string | undefined) => {
+     const handleAddList = (id: string, uri: string) => {
         if(uri) {
                 addPlaylist({
-                uris: [uri], 
-                position: 0,
+                playlist_id: id,
+                params: {
+                    uris: [uri],
+                    position: 0,
+                },
             })
         }
     }
@@ -117,7 +120,9 @@ export const SearchResultList = ({
                             <span className='itemAlbumName'>{track.album?.name}</span>
                         </Typography>
                         <IconButton color="primary" aria-label="노래추가" className="btnAddList" onClick={(e) => {
-                            handleAddList(track.uri)
+                            if(track.uri) {
+                                handleAddList(id as string, track.uri)
+                            }
                         }}>
                             <PlaylistAddIcon />
                         </IconButton>

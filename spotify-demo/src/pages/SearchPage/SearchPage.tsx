@@ -5,6 +5,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import CategoryList from './components/CategoryList';
 import SearchWithKeywordPage from './SearchWithKeywordPage';
 import { useLocation, useNavigate, useParams } from 'react-router';
+import ButtonSet from '../../common/components/ButtonSet';
 
 const SearchPageContent = styled("div") ({
   overflow: "hidden",
