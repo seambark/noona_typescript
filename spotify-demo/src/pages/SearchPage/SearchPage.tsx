@@ -4,7 +4,7 @@ import { IconButton, InputBase, Paper, styled } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import CategoryList from './components/CategoryList';
 import SearchWithKeywordPage from './SearchWithKeywordPage';
-import { useNavigate, useParams } from 'react-router';
+import { useLocation, useNavigate, useParams } from 'react-router';
 
 const SearchPageContent = styled("div") ({
   overflow: "hidden",
@@ -16,6 +16,7 @@ const SearchPage = () => {
   const { keyword } = useParams<{ keyword: string }>();
   const [ searchInputVal, setSearchInputVal ] = useState<string>("");
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleSearchKeyword = (event:React.ChangeEvent<HTMLInputElement>) => {
       setSearchInputVal(event.target.value)
@@ -28,8 +29,16 @@ const SearchPage = () => {
   }
 
   useEffect(() => {
-    if(searchInputVal === "" && keyword) {
-      return setSearchInputVal(keyword);
+    if(keyword === "" && searchInputVal !== "") {
+      return setSearchInputVal("");
+    }
+
+    if(keyword !== "" && searchInputVal === "") {
+      return setSearchInputVal(keyword)
+    }
+
+    if(location.pathname === "/search") {
+      return setSearchInputVal("");
     }
   },[keyword])
   
