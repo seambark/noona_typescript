@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import useGetCategories from '../../hooks/useGetCategories'
 import { IconButton, InputBase, Paper, styled } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import CategoryList from './components/CategoryList';
 import SearchWithKeywordPage from './SearchWithKeywordPage';
+import { useNavigate, useParams } from 'react-router';
 
 const SearchPageContent = styled("div") ({
   overflow: "hidden",
@@ -12,12 +13,25 @@ const SearchPageContent = styled("div") ({
 
 
 const SearchPage = () => {
-  
-  const [ keyword, setKeyword ] = useState<string>("");
+  const { keyword } = useParams<{ keyword: string }>();
+  const [ searchInputVal, setSearchInputVal ] = useState<string>("");
+  const navigate = useNavigate();
 
   const handleSearchKeyword = (event:React.ChangeEvent<HTMLInputElement>) => {
-      setKeyword(event.target.value)
+      setSearchInputVal(event.target.value)
+
+      if(event.target.value === "") {
+        navigate(`/search`);
+      } else {
+        navigate(`/search/${encodeURIComponent(event.target.value)}`);
+      }  
   }
+
+  useEffect(() => {
+    if(searchInputVal === "" && keyword) {
+      return setSearchInputVal(keyword);
+    }
+  },[keyword])
   
   return (
     <SearchPageContent>
@@ -29,15 +43,15 @@ const SearchPage = () => {
             sx={{ ml: 1, flex: 1 }}
             placeholder="검색어를 입력해 주세요."
             inputProps={{ 'aria-label': '노래검색' }}
-            value={keyword} 
+            value={searchInputVal} 
             onChange={handleSearchKeyword}
         />
         <IconButton type="button" sx={{ p: '10px' }} aria-label="search">
             <SearchIcon />
         </IconButton>
       </Paper>
-      {keyword ? (
-          <SearchWithKeywordPage keyword={keyword}/>
+      {searchInputVal ? (
+          <SearchWithKeywordPage />
         ) : (
           <CategoryList />
         )

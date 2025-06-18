@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import useSearchItemsByKeyword from '../../hooks/useSearchItemsByKeyword';
 import { SEARCH_TYPE } from '../../models/search';
 import NoData from '../../common/components/NoData';
@@ -7,15 +7,16 @@ import { Grid, styled, Typography } from '@mui/material';
 import Card from '../../common/components/Card';
 import Loading from '../../common/components/Loading';
 import ErrorMessage from '../../common/components/ErrorMessage';
+import { useParams } from 'react-router';
 
 
-interface SearchProps {
-    keyword: string;
-    // list: Track[];
-    // hasNextPage: boolean;
-    // isFetchingNextPage: boolean;
-    // fetchNextPage: () => void;
-}
+// interface SearchProps {
+//    keywordVal: string;
+//    list: Track[];
+//    hasNextPage: boolean;
+//    isFetchingNextPage: boolean;
+//    fetchNextPage: () => void;
+// }
 
 const SearchContent = styled("div") ({
   height: "calc(100% - 78px)",
@@ -35,7 +36,8 @@ const BoxItem = styled("div") ({
   flex: "1 1 48%",
 });
 
-const SearchWithKeywordPage = ({keyword}:SearchProps) => {
+const SearchWithKeywordPage = () => {
+  const { keyword } = useParams<{ keyword: string }>();
 
   const { 
         data: searchKeywordList, 
@@ -45,7 +47,7 @@ const SearchWithKeywordPage = ({keyword}:SearchProps) => {
         // isFetchingNextPage,
         // fetchNextPage,
     } = useSearchItemsByKeyword({
-        q: keyword,
+        q: keyword as string,
         type: [SEARCH_TYPE.Track, SEARCH_TYPE.Artist, SEARCH_TYPE.Album],
         limit: 6,
     });
