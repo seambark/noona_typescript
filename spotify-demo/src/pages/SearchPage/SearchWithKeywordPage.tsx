@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import useSearchItemsByKeyword from '../../hooks/useSearchItemsByKeyword';
 import { SEARCH_TYPE } from '../../models/search';
 import NoData from '../../common/components/NoData';
@@ -8,6 +8,9 @@ import Card from '../../common/components/Card';
 import Loading from '../../common/components/Loading';
 import ErrorMessage from '../../common/components/ErrorMessage';
 import { useParams } from 'react-router';
+import { Track } from '../../models/track';
+import { SimplifiedAlbum } from '../../models/album';
+import { Artist } from '../../models/artist';
 
 
 // interface SearchProps {
@@ -36,65 +39,75 @@ const BoxItem = styled("div") ({
   flex: "1 1 48%",
 });
 
-const SearchWithKeywordPage = () => {
-  const { keyword } = useParams<{ keyword: string }>();
+interface SearchResultListProps {
+  keyword: string;
+}
+
+const SearchWithKeywordPage = ({keyword}:SearchResultListProps) => {
+  if (!keyword || keyword.trim() === "") return null;
 
   const { 
         data: searchKeywordList, 
         error: searchKeywordListError, 
         isLoading: isSearchKeywordListLoading,
-        // hasNextPage,
-        // isFetchingNextPage,
-        // fetchNextPage,
     } = useSearchItemsByKeyword({
-        q: keyword as string,
+        q: keyword,
         type: [SEARCH_TYPE.Track, SEARCH_TYPE.Artist, SEARCH_TYPE.Album],
         limit: 6,
     });
 
+    const tracks = searchKeywordList?.pages.flatMap(p => p.tracks?.items ?? []).filter(Boolean) ?? [];
+    const albums = searchKeywordList?.pages.flatMap(p => p.albums?.items ?? []).filter(Boolean) ?? [];
+    const artists = searchKeywordList?.pages.flatMap(p => p.artists?.items ?? []).filter(Boolean) ?? [];
+
+  useEffect(() => {
+    console.log("🔍 검색어:", keyword);
+    console.log("📦 API 응답 데이터:", searchKeywordList);
+    // if (error) console.error("❌ 검색 오류:", error);
+  }, [searchKeywordList, searchKeywordListError, keyword]);
 
     if(isSearchKeywordListLoading) return <Loading />;
     if(searchKeywordListError) {
-    return <ErrorMessage errorMessage={searchKeywordListError.message} />;
+    return <Typography>검색 중 오류가 생겼습니다. 다시 검색해주세요.</Typography>;
   }
     
   return (
     <>
-    {searchKeywordList  &&(
+    {searchKeywordList  && (
     <SearchContent>
       <ContentBox>
         <BoxItem>
           <Typography variant='h2' mb="15px">Top result</Typography>
-          {(keyword && (searchKeywordList?.pages[0].tracks?.items.length !== 0 ? (
+          {(tracks.length > 0 ? (
             <Grid container spacing={{ xs: 2, sm: 2, md: 1.5 }}>
               <Grid size={{xs:6, sm:4, md:2}}>
                   <Card 
-                    image={searchKeywordList?.pages[0].tracks?.items[0].album?.images[0].url}
-                    name={searchKeywordList?.pages[0].tracks?.items[0].name}
-                    artistName={searchKeywordList?.pages[0].tracks?.items[0].artists[0].name} 
+                    image={tracks[0].album?.images[0].url}
+                    name={tracks[0].name}
+                    artistName={tracks[0].artists[0].name} 
                   />
                 </Grid>
-            </Grid>) : <NoData text='검색결과 없음'/>)
+            </Grid>) : <NoData text='검색결과 없음'/>
           )}
         </BoxItem>
         <BoxItem>
           <Typography variant='h2' mb="15px">Songs</Typography>
-          {(keyword && searchKeywordList?.pages[0].tracks) && 
+          {tracks.length > 0 && 
           <SearchListItem 
-            list={searchKeywordList?.pages[0].tracks?.items}
+            list={tracks}
           />}
         </BoxItem>
       </ContentBox>
       <ContentBox>
         <BoxItem>
           <Typography variant='h2' mb="15px">Artists</Typography>
-          {keyword && ((searchKeywordList?.pages[0].artists.items.length !== 0) ? (
+          {keyword && ((artists.length !== 0) ? (
             <Grid container spacing={{ xs: 2, sm: 2, md: 1.5 }}>
             {
-              searchKeywordList?.pages[0].artists.items.map((artist)=> (
+              artists.map((artist)=> (
                 <Grid size={{xs:6, sm:4, md:2}} key={artist.id}>
                   <Card
-                    image={artist.images[0].url}
+                    image={artist.images?.[0]?.url}
                     name={artist.name}
                     artistName={artist.type}
                   />
@@ -108,10 +121,10 @@ const SearchWithKeywordPage = () => {
       <ContentBox>
         <BoxItem>
           <Typography variant='h2' mb="15px">Albums</Typography>
-          {keyword && (searchKeywordList?.pages[0].albums.items.length !== 0 ? (
+          {keyword && (albums.length > 0 ? (
             <Grid container spacing={{ xs: 2, sm: 2, md: 1.5 }}>
             {
-              searchKeywordList?.pages[0].albums.items.map((album)=> (
+              albums.map((album)=> (
                 <Grid size={{xs:6, sm:4, md:2}} key={album.id}>
                   <Card 
                     image={album.images[0].url} 

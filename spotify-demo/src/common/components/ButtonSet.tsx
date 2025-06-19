@@ -3,9 +3,10 @@ import React, { useState } from 'react'
 import { SimplifiedPlaylist } from '../../models/playlist';
 import AddIcon from '@mui/icons-material/Add';
 import useAddPlaylist from '../../hooks/useAddPlaylist';
+import useGetCurrentUserPlaylists from '../../hooks/useGetCurrentUserPlaylists';
 
 interface ButtonSetProps {
-    optionsList?: SimplifiedPlaylist[];
+    // optionsList?: SimplifiedPlaylist[];
     trackUri?: string | undefined;
 }
 
@@ -68,7 +69,18 @@ const StyledMenu = styled((props: MenuProps) => (
   },
 }));
 
-const ButtonSet = ({optionsList,  trackUri}:ButtonSetProps) => {
+const ButtonSet = ({trackUri}:ButtonSetProps) => {
+  const { 
+        data : optionsList,
+        isLoading,
+        error,
+        // hasNextPage,
+        // isFetchingNextPage,
+        // fetchNextPage,
+     } = useGetCurrentUserPlaylists({limit:10, offset:0});
+
+     const options = optionsList?.pages[0].items ?? [];
+
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -117,7 +129,7 @@ const ButtonSet = ({optionsList,  trackUri}:ButtonSetProps) => {
         open={open}
         onClose={handleClose}
       >
-        {optionsList && optionsList.map((option, index) => (
+        {options.length > 0 && options.map((option, index) => (
             <MenuItem 
                 onClick={() => {
                     handleClose()

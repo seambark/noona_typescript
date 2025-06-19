@@ -86,14 +86,22 @@ const Util = styled("div") ({
 })
 
 const SearchListItem = ({list, children, handleAddList}:SearchListProps) => {
-   const { 
-      data: playlist,
-      isLoading: playlistLoading,
-      error: playlistError,
-      // hasNextPage,
-      // isFetchingNextPage,
-      // fetchNextPage,
-   } = useGetCurrentUserPlaylists({limit:10, offset:0});
+    const accessToken = localStorage.getItem("access_token");
+
+
+//    const { 
+//       data: playlist,
+//       isLoading: playlistLoading,
+//       error: playlistError,
+//       // hasNextPage,
+//       // isFetchingNextPage,
+//       // fetchNextPage,
+//    } = useGetCurrentUserPlaylists({limit:10, offset:0});
+
+//    if(accessToken) {
+
+//        console.log(playlist)
+//    }
 
    const handleCheckPlaylist = () => {
         return  alert("로그인 후 이용가능")
@@ -115,14 +123,15 @@ const SearchListItem = ({list, children, handleAddList}:SearchListProps) => {
                 <span className='itemAlbumName'>{track.album?.name}</span>
             </Typography>
             <Util>
-                {playlist ? (
-                    <ButtonSet optionsList={playlist?.pages[0].items} trackUri={track.uri} />
-                ) : (
+                {!accessToken ? (
                     <IconButton color="primary" aria-label="노래추가" className="addBtn" onClick={() => {
                         handleCheckPlaylist()
                     }}>
                         <AddIcon />
                     </IconButton>
+                ) : (
+                    // <ButtonSet optionsList={playlist?.pages[0].items} trackUri={track.uri} />
+                    <ButtonSet trackUri={track.uri} />
                 )}
             </Util>
         </ItemTxt>

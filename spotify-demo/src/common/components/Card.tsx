@@ -3,9 +3,9 @@ import React from 'react';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 
 interface CardProps {
-    name: string;
-    image: string;
-    artistName: string | undefined;
+    name?: string;
+    image?: string;
+    artistName?: string | undefined;
 }
 
 const CardItem = styled("div")({
@@ -71,7 +71,7 @@ const Card = ({image, name, artistName}:CardProps) => {
   return (
     <CardItem>
         <Image className="imgBox">
-            {!image || undefined ? "" : <img src={image} alt=''/>}
+            {!image ? "" : <img src={image} alt=''/>}
             <PlayArrowIcon className='iconPlay'/>
         </Image>
         <div className='txtBox'>

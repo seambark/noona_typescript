@@ -7,7 +7,7 @@ const useSearchItemsByKeyword = (params:SearchRequestParams) => {
     const clientCredentialToken = useClientCredentialToken();
 
     return useInfiniteQuery({
-        queryKey:["search", params],
+        queryKey:["search", params.q, params.type],
         queryFn: ({pageParam = 0}) => {
             if(!clientCredentialToken) {
                 throw new Error("no token available");
@@ -15,12 +15,13 @@ const useSearchItemsByKeyword = (params:SearchRequestParams) => {
             
             return searchItemsByKeyword(clientCredentialToken, {...params, offset: pageParam});
         },
+        enabled: !!params.q && !!clientCredentialToken,
         initialPageParam: 0,
         getNextPageParam:(lastPage) => {
             const nextPageUrl = 
                 lastPage.tracks?.next ||
                 lastPage.artists?.next ||
-                lastPage.album?.next ||
+                lastPage.albums?.next ||
                 lastPage.playlists?.next ||
                 lastPage.show?.next ||
                 lastPage.episode?.next ||

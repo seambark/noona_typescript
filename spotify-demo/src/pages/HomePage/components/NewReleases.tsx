@@ -17,7 +17,7 @@ const NewReleases = () => {
   }
   return (
     <div>
-        <Typography variant='h1' marginBottom="15px">New Released Albums</Typography>
+        <Typography variant='h1' marginBottom="15px">새 앨범</Typography>
         {data && data.albums.items.length > 0 ? 
           <Grid container spacing={{ xs: 2, sm: 2, md: 1.5 }}>
             {data.albums.items.map((album) => (

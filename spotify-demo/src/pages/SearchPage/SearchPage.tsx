@@ -5,43 +5,61 @@ import SearchIcon from '@mui/icons-material/Search';
 import CategoryList from './components/CategoryList';
 import SearchWithKeywordPage from './SearchWithKeywordPage';
 import { useLocation, useNavigate, useParams } from 'react-router';
-import ButtonSet from '../../common/components/ButtonSet';
 
 const SearchPageContent = styled("div") ({
   overflow: "hidden",
   height: "calc(100% - 60px)",
 });
 
-
+let debounceTimer: ReturnType<typeof setTimeout>;
 const SearchPage = () => {
-  const { keyword } = useParams<{ keyword: string }>();
-  const [ searchInputVal, setSearchInputVal ] = useState<string>("");
+  const { keyword: initialKeyword } = useParams<{ keyword: string }>();
+  const [keyword, setKeyword] = useState(initialKeyword || "");
+  // const [ searchInputVal, setSearchInputVal ] = useState<string>("");
   const navigate = useNavigate();
-  const location = useLocation();
+  // const location = useLocation();
 
   const handleSearchKeyword = (event:React.ChangeEvent<HTMLInputElement>) => {
-      setSearchInputVal(event.target.value)
+      setKeyword(event.target.value)
 
-      if(event.target.value === "") {
-        navigate(`/search`);
-      } else {
-        navigate(`/search/${encodeURIComponent(event.target.value)}`);
-      }  
+      // if(event.target.value === "") {
+      //   navigate(`/search`);
+      // } else {
+      //   navigate(`/search/${encodeURIComponent(event.target.value)}`);
+      // }  
   }
 
   useEffect(() => {
-    if(keyword === "" && searchInputVal !== "") {
-      return setSearchInputVal("");
-    }
+    setKeyword(initialKeyword || "");
+  }, [initialKeyword]);
 
-    if(keyword !== "" && searchInputVal === "") {
-      return setSearchInputVal(keyword)
-    }
+  useEffect(() => {
+    if (debounceTimer) clearTimeout(debounceTimer);
 
-    if(location.pathname === "/search") {
-      return setSearchInputVal("");
-    }
-  },[keyword])
+      debounceTimer = setTimeout(() => {
+        const trimmed = keyword.trim();
+        if (trimmed) {
+          navigate(`/search/${encodeURIComponent(trimmed)}`);
+        } else {
+          navigate("/search");
+        }
+      }, 500);
+
+      return () => clearTimeout(debounceTimer);
+  }, [keyword, navigate]);
+  // useEffect(() => {
+  //   if(keyword === "" && searchInputVal !== "") {
+  //     return setSearchInputVal("");
+  //   }
+
+  //   if(keyword !== "" && searchInputVal === "") {
+  //     return setSearchInputVal(keyword)
+  //   }
+
+  //   if(location.pathname === "/search") {
+  //     return setSearchInputVal("");
+  //   }
+  // },[keyword])
   
   return (
     <SearchPageContent>
@@ -53,15 +71,15 @@ const SearchPage = () => {
             sx={{ ml: 1, flex: 1 }}
             placeholder="검색어를 입력해 주세요."
             inputProps={{ 'aria-label': '노래검색' }}
-            value={searchInputVal} 
-            onChange={handleSearchKeyword}
+            value={keyword} 
+            onChange={(e) => setKeyword(e.target.value)}
         />
         <IconButton type="button" sx={{ p: '10px' }} aria-label="search">
             <SearchIcon />
         </IconButton>
       </Paper>
-      {searchInputVal ? (
-          <SearchWithKeywordPage />
+      {keyword && keyword.trim().length > 0 ? (
+          <SearchWithKeywordPage keyword={keyword}/>
         ) : (
           <CategoryList />
         )
