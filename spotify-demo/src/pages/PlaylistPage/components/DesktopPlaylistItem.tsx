@@ -31,10 +31,13 @@ const getTime = (difference:number):string => {
   return (
     <TableRow hover>
         <TableCell style={{borderBottom:"none"}}>{index}</TableCell>
-        <TableCell style={{borderBottom:"none"}}>{item.track.name || "no name"}</TableCell>
-        <TableCell style={{borderBottom:"none"}}>{isEpisode(item.track) ? "N/A" : item.track.album?.name }</TableCell>
-        <TableCell style={{borderBottom:"none"}}>{item.added_at ? getFormatDate(item.added_at)  : "Unknown"}</TableCell>
-        <TableCell style={{borderBottom:"none"}}>{item.track.duration_ms ? getTime(item.track.duration_ms) : "Unknown"}</TableCell>
+        <TableCell style={{borderBottom:"none"}}>
+            <span className='title'>{item.track.name || "no name"}</span>
+            <span className='onlyM subInfo'>{isEpisode(item.track) ? "N/A" : item.track.album?.name } | ({item.track.duration_ms ? getTime(item.track.duration_ms) : "Unknown"})</span>
+        </TableCell>
+        <TableCell style={{borderBottom:"none"}}  className='onlyPC'>{isEpisode(item.track) ? "N/A" : item.track.album?.name }</TableCell>
+        <TableCell style={{borderBottom:"none"}}  className='onlyPC'>{item.added_at ? getFormatDate(item.added_at)  : "Unknown"}</TableCell>
+        <TableCell style={{borderBottom:"none"}}  className='onlyPC'>{item.track.duration_ms ? getTime(item.track.duration_ms) : "Unknown"}</TableCell>
     </TableRow>
   )
 }

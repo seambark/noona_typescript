@@ -6,6 +6,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import LibraryHead from './components/LibraryHead';
 import Library from './components/Library';
 import Navbar from './components/Navbar';
+import FloatNav from './components/FloatNav';
 
 const Layout = styled("div")({
   display: "flex",
@@ -13,6 +14,7 @@ const Layout = styled("div")({
   padding: "20px 10px",
   "@media (max-width:750px)" : {
        height: "inherit",
+       padding: "0 0 50px",
   },
 });
 
@@ -23,9 +25,12 @@ const SideBar = styled("div")(({theme}) => ({
   display:"flex",
   flexDirection:"column",
   flexShrink:0,
-  [theme.breakpoints.down("sm")]: {
+  "@media (max-width:750px)" : {
     display: "none",
-  }
+  }, 
+  // [theme.breakpoints.down("sm")]: {
+  //   display: "none",
+  // }
 }));
 
 const ContentBox = styled(Box)(({theme}) => ({
@@ -90,6 +95,7 @@ const AppLayout = () => {
         <Navbar />
         <Outlet />
       </ContentBox>
+      <FloatNav />
     </Layout>
   )
 }

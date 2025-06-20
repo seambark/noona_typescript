@@ -9,7 +9,12 @@ const CategoryContent = styled("div") ({
   height: "calc(100% - 78px)",
   overflowY: "auto",
   scrollbarWidth: "none",
+  "@media (max-width:500px)" : {
+    flexDirection: "column",
+    height: "auto",
+  }, 
 })
+
 const CategoryItem = styled("div") ({
   display: "flex",
   justifyContent: "space-between",
@@ -24,7 +29,16 @@ const CategoryItem = styled("div") ({
     width: "50px",
     height: "50px",
     borderRadius: "50%",
-  }
+  },
+  "@media (max-width:1150px)" : {
+    flex: "1 1 47%",
+    maxWidth: "48%",
+  },
+  "@media (max-width:500px)" : {
+    flex: "unset",
+    maxWidth: "unset",
+    width: "100%",
+  }, 
 
 });
 

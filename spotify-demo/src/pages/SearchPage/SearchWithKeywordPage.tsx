@@ -33,6 +33,11 @@ const SearchContent = styled("div") ({
 const ContentBox = styled("div") ({
   display: "flex",
   gap: "15px",
+  "&.type01": {
+    "@media (max-width:750px)" : {
+        flexDirection:"column",
+      }, 
+  }
 })
 
 const BoxItem = styled("div") ({
@@ -75,7 +80,7 @@ const SearchWithKeywordPage = ({keyword}:SearchResultListProps) => {
     <>
     {searchKeywordList  && (
     <SearchContent>
-      <ContentBox>
+      <ContentBox className='type01'>
         <BoxItem>
           <Typography variant='h2' mb="15px">Top result</Typography>
           {(tracks.length > 0 ? (

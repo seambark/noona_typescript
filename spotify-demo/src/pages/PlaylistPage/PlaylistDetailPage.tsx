@@ -18,8 +18,29 @@ const DetailContainer = styled("div")({
   flexDirection: "column",
   height: "calc(100% - 25px)",
   paddingBottom: "25px",
+  "& td .subInfo": {
+    fontSize: "12px",
+    marginTop: "5px",
+    opacity: "0.8",
+  },
   "@media (max-width:900px)" : {
        height: "inherit",
+  },
+  "@media (min-width:751px)" : {
+    "& .onlyM": {
+      display: "none",
+    },
+  },
+   "@media (max-width:750px)" : {
+    "& .onlyPC": {
+      display: "none",
+    },
+    "& .onlyM": {
+      display: "block",
+    },
+    "& td .title":{
+      fontSize: "16px",
+    }
   },
 });
 
@@ -158,9 +179,9 @@ const PlaylistDetailPage = () => {
               <TableRow>
                 <TableCell>#</TableCell>
                 <TableCell>Title</TableCell>
-                <TableCell>Album</TableCell>
-                <TableCell>Date added</TableCell>
-                <TableCell>Duration</TableCell>
+                <TableCell className='onlyPC'>Album</TableCell>
+                <TableCell className='onlyPC'>Date added</TableCell>
+                <TableCell className='onlyPC'>Duration</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>

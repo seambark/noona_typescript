@@ -9,6 +9,9 @@ import { useLocation, useNavigate, useParams } from 'react-router';
 const SearchPageContent = styled("div") ({
   overflow: "hidden",
   height: "calc(100% - 60px)",
+  // "@media (min-width:750px)" : {
+  //    height: "auto",
+  //   }, 
 });
 
 let debounceTimer: ReturnType<typeof setTimeout>;
